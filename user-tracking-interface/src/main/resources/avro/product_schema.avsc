@@ -1,0 +1,30 @@
+{
+  "type": "record",
+  "namespace": "com.pluralsight.kafka.model",
+  "name": "Product",
+  "fields": [
+    {
+      "name": "Color",
+      "type": {
+        "name": "Color",
+        "type": "enum",
+        "symbols":  ["GREEN", "BLUE", "PURPLE"]
+        }
+    }, {
+      "name": "ProductType",
+      "type": {
+        "name": "ProductType",
+        "type": "enum",
+        "symbols":  ["TSHIRT", "DESIGN"]
+        }
+
+    }, {
+      "name": "DesignType",
+      "type": {
+        "name": "DesignType",
+        "type": "enum",
+        "symbols":  ["NONE", "SUITCASE", "CAR", "WARNING"]
+        }
+    }
+  ]
+}
