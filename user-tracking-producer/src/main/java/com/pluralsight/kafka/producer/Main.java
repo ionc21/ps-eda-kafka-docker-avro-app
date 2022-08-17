@@ -16,13 +16,18 @@ import static java.lang.Thread.sleep;
 
 @Slf4j
 public class Main {
-
+    private static final String TOPIC = "user-tracking-avro";
     public static void main(String[] args) throws InterruptedException {
 
         EventGenerator eventGenerator = new EventGenerator();
 
         Properties props = new Properties();
-        props.put("bootstrap.servers", "localhost:9093,localhost:9094");
+
+        // Because now we make use of the broker deployed on a docker container
+        // taken from the docker-compose.yml of
+        // https://github.com/confluentinc/cp-all-in-one/tree/7.2.1-post/cp-all-in-one-community
+        // props.put("bootstrap.servers", "localhost:9093,localhost:9094");
+        props.put("bootstrap.servers", "localhost:9092");
         props.put("key.serializer", "io.confluent.kafka.serializers.KafkaAvroSerializer");
         props.put("value.serializer", "io.confluent.kafka.serializers.KafkaAvroSerializer");
         props.put("schema.registry.url", "http://localhost:8081");
@@ -37,7 +42,7 @@ public class Main {
             User key = extractKey(event);
             Product value = extractValue(event);
 
-            ProducerRecord<User, Product> producerRecord = new ProducerRecord<>("user-tracking-avro", key, value);
+            ProducerRecord<User, Product> producerRecord = new ProducerRecord<>(TOPIC, key, value);
 
             log.info("Producing to Kafka the record: " + key + ":" + value);
             producer.send(producerRecord);

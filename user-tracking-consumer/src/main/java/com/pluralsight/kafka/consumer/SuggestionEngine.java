@@ -13,7 +13,7 @@ import java.util.List;
 @Slf4j
 public class SuggestionEngine {
 
-    private UserDB userDB = new UserDB();
+    private final UserDB userDB = new UserDB();
 
     public void processSuggestions(User user, Product product) {
         log.info("InternalUser with ID: " + user.getUserId() +
