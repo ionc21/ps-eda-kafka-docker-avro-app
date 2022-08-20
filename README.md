@@ -31,8 +31,9 @@ To get this set up to work quickly, I created a [docker/docker-compose.yml](dock
 one found in
 [GitHub repo: confluentinc cp-all-in-one-community 7.2.1-post](https://github.com/confluentinc/cp-all-in-one/tree/7.2.1-post/cp-all-in-one-community).
 - 7.2.1-post is the current default branch reflecting the latest versions of the Apache Kafka & Confluent technology stack at the date of writing (August 2022).
-- cp-all-in-one-community refers to all components of Confluent platform technology stack that may be used freely with the exception of creating a SaaS that tries to compete with Confluent.
-	- See for the full text: [confluent-community-license](https://www.confluent.io/confluent-community-license/)
+- cp-all-in-one-community refers to all components of Confluent platform technology stack that fall under the 
+  [confluent-community-license](https://www.confluent.io/confluent-community-license/). All source code under this licence
+  may be accessed, modified and redistributed freely except for creating a SaaS that tries to compete with Confluent.
 - To run the original cp-all-in-one-community docker compose offering and explore their code examples see:
 	- [cp-all-in-one-community documentation](https://docs.confluent.io/platform/current/tutorials/build-your-own-demos.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.cp-all-in-one#cp-all-in-one-community) 
 	- [CE Docker Quickstart documentation](https://docs.confluent.io/platform/current/quickstart/ce-docker-quickstart.html)
