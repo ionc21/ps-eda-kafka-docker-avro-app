@@ -51,22 +51,24 @@ Java classes that are generated from two AVRO schema's, [product_schema.avsc](us
 and [user_schema.avsc](user-tracking-interface/src/main/resources/avro/user_schema.avsc) using the 
 `org.apache.avro:avro-maven-plugin`. 
 
-These Java classes are part of the messages put together and send to the topic by the producer and read from the topic 
-by the consumer. So both the user-tracking-consumer and the user-tracking-producer module depend on the user-tracking-interface.
+These Java classes are part of the messages put together, serialized to an AVRO byte stream and send to the topic by the
+producer and then read from the topic by the consumer. So both the user-tracking-consumer and the user-tracking-producer
+module depend on the user-tracking-interface module.
 
 In the original example the Java classes were generated manually on the command line and copied as model packages in 
 both the producer and the consumer maven module. 
 
 My introduction of the separate user-tracking-interface maven module 
-- makes running the example less complex as the generated Java classes are created automatically as part of a maven build of the project.
+- makes running the example less complex as the generated Java classes are created automatically as part of a maven build
+  of the project.
 - reduces code duplication.
 I think both are great benefits that didn´t take much effort to accomplish.
 
 ---
 **Note**
 
-For IntelliJ to notice the content of [user-tracking-interface/src/main/generated](user-tracking-interface/src/main/generated)
-you need to mark the directory as *Generated Sources Root* by right-clicking on it in the Project view window and
+For IntelliJ to notice the content of the [user-tracking-interface/src/main/generated](user-tracking-interface/src/main/generated)
+directory, you need to mark the directory as *Generated Sources Root* by right-clicking on it in the Project view window and
 choosing *Mark Directory as* > *Generated Sources Root* from the context menu.
 
 ---
