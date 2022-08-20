@@ -80,6 +80,12 @@ choosing *Mark Directory as* > *Generated Sources Root* from the context menu.
 ### Updating all maven dependencies
 I made an effort to update all maven dependencies to the versions available now (August 2022).
 
+## Prerequisites
+- A JDK should be installed, version 8 is the minimal requirement, but I tested this example with version 17.
+- Maven, I tested the example with version 3.8.1
+- Docker (including Docker Compose, the docker-compose-plugin is the most recent version v2.6.0, where the commands
+  start with `docker compose` rather than `docker-compose`. The latter is a deprecated older version 1.29.2)
+
 ## Usage
 - Open a terminal in the project/repository root dir
     ```bash
