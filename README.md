@@ -95,3 +95,47 @@ I made an effort to update all maven dependencies to the versions available now 
     - Run the Main class of the user-tracker-producer module [com.pluralsight.kafka.producer.Main](user-tracking-producer/src/main/java/com/pluralsight/kafka/producer/Main.java).
         - This application will exit after publishing ten events on the `user-tracking-avro` topic, but you may run it multiple
           times to see multiples of ten events being processed by the consumer. 
+
+## The Schema registration process
+In a production environment the schema registry is configured to only accept schemas registered manually by an authorized administrator.
+In our test setup, however, any Kafka client reading or writing to a topic is able to register an AVRO schema in the schema registry.
+
+In our user-tracking-interface module we generated Java source code for two schemas with the maven build:
+- [`user_schema.avsc`](user-tracking-interface/src/main/resources/avro/user_schema.avsc) for the message key,
+- [`product_schema.avsc`](user-tracking-interface/src/main/resources/avro/product_schema.avsc) for the message value.
+
+In the two root classes derived from both schema's [`com.pluralsight.kafka.model.User`](user-tracking-interface/src/main/generated/com/pluralsight/kafka/model/User.java)
+and [`com.pluralsight.kafka.model.Product`](user-tracking-interface/src/main/generated/com/pluralsight/kafka/model/Product.java) when
+doing a `mvn clean compile` there is a class variable `com.pluralsight.kafka.model.Product.SCHEMA$` of type
+`org.apache.avro.Schema`. Therefore, each message send to the Kafka topic contains the complete schema info of both its key
+and its value.
+
+When the producer is started it begins creating messages, which are then serialized into an AVRO encoded stream of bytes,
+which will be sent to the topic. there it will be checked if the schemas are present in the registry. If not the schemas are
+posted to the registry. Then the Consumer asks the registry for both schema's with a GET request. To be able to deserialize
+both the keys and values from the messages read from the topic.
+
+All schemas are stored in the registry linked to a subject. The default subject naming strategy is `${topic-name}-key` &
+`${topic-name}-value`. So in this particular example we should have two schemas: one linked to the subject 
+`user-tracking-avro-key` and one linked to `user-tracking-avro-value`
+
+The schema registry keeps the schemas in memory, but also saves them to a Kafka topic named `_schemas`. We can check all
+topics present with the following command:
+```bash
+$ docker exec broker kafka-topics --bootstrap-server broker:9092 --list
+__consumer_offsets
+_schemas
+user-tracking-avro
+```
+This shows 3 topics after starting everything with `docker compose up -d` and creating our own schema with 
+`./create-topic.sh`. In the `__consumer_offsets` consumers and consumer-groups can maintain the offset data of the last
+message that was read successfully from the `user-tracking-avro` topic.
+
+Which subjects and schemas were stored into the registry can be checked with the respective API calls:
+- `http://localhost:8081/subjects/`,
+- `http://localhost:8081/schemas/`.
+From the logging of the schema registry container this can be obtained as well. We can rerun the producer for another ten messages, 
+and we see it posting the key and value schemas to the registry again. This is probably not necessary as they are already present.
+As the consumer was still running it continues reading the new messages from the topic. It doesn´t need to ask the registry
+again for the schemas. When you restart the consumer it will ask for the schemas again as soon as there are new messages
+written to the topic by a new producer execution session.
